@@ -4,6 +4,7 @@ import { Contato } from "@/components/sections/Contato";
 import { Depoimentos } from "@/components/sections/Depoimentos";
 import { Faq } from "@/components/sections/Faq";
 import { Hero } from "@/components/sections/Hero";
+import { Instagram } from "@/components/sections/Instagram";
 import { Materiais } from "@/components/sections/Materiais";
 import { Oferta } from "@/components/sections/Oferta";
 import { Personalizacao } from "@/components/sections/Personalizacao";
@@ -39,6 +40,7 @@ export default function Home() {
         <Materiais />
         <Processo />
         <Portfolio />
+        <Instagram />
         <Sobre />
         <Depoimentos />
         <Faq />

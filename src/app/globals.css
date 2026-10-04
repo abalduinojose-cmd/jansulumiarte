@@ -395,64 +395,30 @@
     gap: 3rem;
   }
 
-  /* ---- CTA fixo: pílula clara com a nota (padrão Cabana/Celebrare) ------- */
-  .cta-fixo {
-    position: fixed;
-    z-index: 40;
-    left: 50%;
-    bottom: calc(0.9rem + env(safe-area-inset-bottom));
-    transform: translateX(-50%) translateY(160%);
+  /* ---- WhatsApp flutuante redondo (aparece depois do hero) -------------- */
+  .whats-flutuante {
     opacity: 0;
     visibility: hidden;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.8rem;
-    padding: 0.4rem 0.4rem 0.4rem 1.1rem;
-    border-radius: 999px;
-    white-space: nowrap;
-    background: rgb(245 241 234 / 0.94);
-    border: 1px solid rgb(17 17 17 / 0.1);
-    backdrop-filter: blur(14px);
-    color: var(--color-ink);
-    box-shadow: 0 16px 36px -18px rgb(22 16 11 / 0.6);
+    transform: translateY(1rem) scale(0.85);
     transition:
-      transform 0.45s var(--ease-plaina),
       opacity 0.35s ease,
+      transform 0.45s var(--ease-plaina),
       visibility 0s linear 0.45s;
   }
-  .cta-fixo[data-visivel="1"] {
-    transform: translateX(-50%);
+  .whats-flutuante[data-visivel="1"] {
     opacity: 1;
     visibility: visible;
+    transform: none;
     transition:
-      transform 0.45s var(--ease-plaina),
       opacity 0.35s ease,
+      transform 0.45s var(--ease-plaina),
       visibility 0s;
   }
-  html[data-menu="1"] .cta-fixo {
+  .whats-flutuante[data-visivel="1"]:hover {
+    transform: scale(1.06);
+  }
+  html[data-menu="1"] .whats-flutuante {
     visibility: hidden;
-  }
-  .cta-zap {
-    display: inline-flex;
-    height: 2.6rem;
-    align-items: center;
-    gap: 0.45rem;
-    padding-inline: 1rem;
-    border-radius: 999px;
-    background: #1f8f4e;
-    color: #fff;
-    font-weight: 700;
-  }
-  @media (min-width: 768px) {
-    .cta-fixo {
-      left: auto;
-      right: 1.5rem;
-      bottom: 1.5rem;
-      transform: translateY(160%);
-    }
-    .cta-fixo[data-visivel="1"] {
-      transform: none;
-    }
   }
 
   dialog.galeria::backdrop {
@@ -511,7 +477,21 @@
   }
 }
 
+@keyframes pulso {
+  from {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  to {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
+  .whats-pulso {
+    animation: pulso 2.4s ease-out infinite;
+  }
   .sobe {
     animation: sobe 0.9s var(--ease-plaina) both;
   }

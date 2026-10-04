@@ -1,6 +1,8 @@
 import { Clock, MapPin, Navigation } from "lucide-react";
+import Image from "next/image";
 
-import { CONTATO, MAPA_EMBED, MENSAGENS, ROTA, site } from "@/content/site";
+import mapa from "@/assets/mapa/fonte-santa.jpg";
+import { CONTATO, MENSAGENS, PERFIL_GOOGLE, ROTA, site } from "@/content/site";
 import { waLink } from "@/lib/whatsapp";
 
 import { Button } from "../ui/Button";
@@ -11,9 +13,8 @@ import { FormOrcamento } from "./FormOrcamento";
 /**
  * Orçamento em duas metades de um mesmo cartão (estrutura da Celebrare): à
  * esquerda a noite, com o WhatsApp grande (o CTA principal), o NAP, o
- * horário, o Instagram, "Como chegar" e o mapa, que começa como fachada
- * dentro de um <details> e só carrega o iframe do Google depois do clique
- * (zero JS). À direita o formulário, a alternativa.
+ * horário, o Instagram, o mapa na paleta da marca (imagem local, sem
+ * iframe) e "Como chegar". À direita o formulário, a alternativa.
  */
 export function Contato() {
   const item = "flex gap-3.5 text-surface/85";
@@ -48,18 +49,32 @@ export function Contato() {
               </li>
             </ul>
 
-            <details className="group mt-8 overflow-hidden rounded-[1.25rem] border border-surface/12">
-              <summary className="relative grid h-44 cursor-pointer list-none place-items-center bg-[linear-gradient(rgb(245_241_234/0.05)_1px,transparent_1px),linear-gradient(90deg,rgb(245_241_234/0.05)_1px,transparent_1px)] bg-[size:22px_22px] [&::-webkit-details-marker]:hidden">
-                <span className="flex flex-col items-center gap-3 text-center group-open:hidden">
-                  <span className="grid size-12 place-items-center rounded-full bg-accent text-ink">
-                    <MapPin aria-hidden className="size-5" />
+            {/* Mapa na identidade da marca: tiles do OpenStreetMap recoloridos
+                (scripts/mapa.py), imagem local, zero iframe e zero cookie. O
+                pino fica no centro exato, que é o endereço. */}
+            <figure className="relative mt-8 overflow-hidden rounded-[1.25rem] border border-surface/12">
+              <Image src={mapa} alt="Mapa da região da Fonte Santa, em Teresópolis, com a marcenaria marcada no centro, perto da Rodovia Santos Dumont" sizes="(min-width: 1024px) 32rem, 100vw" quality={90} className="h-60 w-full object-cover md:h-72" />
+              <span aria-hidden className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-full">
+                <span className="absolute left-1/2 top-[1.15rem] size-12 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/35 [animation:pulso_2.4s_ease-out_infinite] motion-reduce:hidden" />
+                <span className="relative flex flex-col items-center">
+                  <span className="grid size-10 rotate-45 place-items-center rounded-full rounded-br-none bg-accent shadow-[0_8px_20px_-6px_rgb(0_0_0/0.7)] ring-4 ring-noite/60">
+                    <span className="size-3 -rotate-45 rounded-full bg-noite" />
                   </span>
-                  <span className="font-bold text-surface-alt underline decoration-accent underline-offset-4">{CONTATO.mapa}</span>
                 </span>
-                <span className="hidden font-bold text-accent-claro group-open:inline">Fechar o mapa</span>
-              </summary>
-              <iframe title={`Mapa: ${site.nome}`} src={MAPA_EMBED} loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="block h-72 w-full border-0" />
-            </details>
+              </span>
+              <span aria-hidden className="absolute left-1/2 top-1/2 mt-3 -translate-x-1/2 whitespace-nowrap rounded-full bg-noite/85 px-3 py-1 text-[0.85rem] font-bold text-surface-alt backdrop-blur">
+                {site.nomeCurto}
+              </span>
+              <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="absolute right-2 top-2 inline-flex min-h-11 items-center rounded-full bg-noite/80 px-3 text-[0.75rem] text-surface/85 hover:text-surface-alt">
+                © OpenStreetMap
+              </a>
+              <figcaption className="absolute bottom-3 left-3">
+                <a href={PERFIL_GOOGLE} target="_blank" rel="noopener noreferrer" className="btn btn-vidro h-11 bg-noite/60 px-4 text-[0.88rem]">
+                  <MapPin aria-hidden className="size-4" />
+                  {CONTATO.mapa}
+                </a>
+              </figcaption>
+            </figure>
             <Button href={ROTA} variante="vidro" className="mt-4">
               <Navigation aria-hidden className="size-4" />
               {CONTATO.comoChegar}

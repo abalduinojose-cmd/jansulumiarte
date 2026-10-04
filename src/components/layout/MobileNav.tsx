@@ -23,7 +23,7 @@ export function MobileNav() {
     const raiz = document.documentElement;
     raiz.dataset.menu = aberto ? "1" : "0";
     raiz.style.overflow = aberto ? "hidden" : "";
-    document.querySelectorAll<HTMLElement>("main, footer, .cta-fixo").forEach((el) => {
+    document.querySelectorAll<HTMLElement>("main, footer, .whats-flutuante").forEach((el) => {
       el.inert = aberto;
     });
     if (!aberto) return;

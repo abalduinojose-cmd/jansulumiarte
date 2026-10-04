@@ -11,7 +11,8 @@
     "fotos": "node scripts/fotos.mjs",
     "logo": "node scripts/logo.mjs",
     "analyze": "node scripts/analyze.mjs",
-    "build:pages": "node scripts/pages.mjs"
+    "build:pages": "node scripts/pages.mjs",
+    "videos": "node scripts/videos.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
@@ -31,6 +32,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5",
+    "ffmpeg-static": "^5.3.0",
+    "puppeteer-core": "^25.12.0",
     "sharp": "^0.35.4",
     "tailwindcss": "^4",
     "typescript": "^5"

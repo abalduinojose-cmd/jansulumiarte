@@ -50,7 +50,6 @@ export const PROVA_GOOGLE = `${NOTA} no Google · ${site.avaliacoes.total} avali
 export const ENDERECO_LINHA = `${site.endereco.rua} - ${site.endereco.bairro}, ${site.endereco.cidade} - ${site.endereco.uf}, ${site.endereco.cep}`;
 export const PERFIL_GOOGLE = `https://www.google.com/maps/place/?q=place_id:${site.placeId}`;
 export const ROTA = `https://www.google.com/maps/dir/?api=1&destination=${site.geo.lat},${site.geo.lng}&destination_place_id=${site.placeId}`;
-export const MAPA_EMBED = `https://www.google.com/maps?q=${encodeURIComponent(`${site.nome}, ${ENDERECO_LINHA}`)}&z=15&output=embed`;
 
 /** Mensagens pré-preenchidas por origem (§1.1): qualificam o lead antes da resposta. */
 export const MENSAGENS = {
@@ -172,7 +171,7 @@ export const CONTATO = {
   texto: "O caminho mais rápido é o WhatsApp. Se preferir, deixe seus dados no formulário e a gente responde por lá.",
   ctaWhatsapp: "Chamar no WhatsApp",
   comoChegar: "Como chegar",
-  mapa: "Abrir o mapa aqui",
+  mapa: "Abrir no Google Maps",
   formTitulo: "Prefere que a gente chame você?",
   enviar: "Enviar pedido",
   sucessoTitulo: "Pedido recebido.",
@@ -180,9 +179,26 @@ export const CONTATO = {
   /* [[DEFINIR DESTINO DO FORMULÁRIO: e-mail, Resend ou webhook]] */
 } as const;
 
+/* Sem crédito de desenvolvedor no rodapé (pedido de 04/10). */
 export const RODAPE = {
   politica: "[[POLÍTICA DE PRIVACIDADE: PENDENTE]]",
-  credito: { rotulo: "Site por FluxoIA Studio", href: "https://www.instagram.com/fluxo_ia_studio/" },
+} as const;
+
+/** Reels do @jansu_lumiarte (npm run videos). Legendas descrevem o que se vê, sem especificar material. */
+export const INSTAGRAM = {
+  eyebrow: "Instagram",
+  titulo: "Obras em vídeo.",
+  fino: "em vídeo.",
+  texto: "Ambientes entregues pela JanSu, filmados na entrega. Toque para assistir com som.",
+  videos: [
+    { id: "loja-planejada", titulo: "Loja planejada", legenda: "Prateleiras amadeiradas do piso ao teto e fita de LED embutida.", data: "julho de 2026" },
+    { id: "quarto-bom-retiro", titulo: "Quarto no Bom Retiro", legenda: "Armários até o teto, painel amadeirado e criados suspensos iluminados. Teresópolis.", data: "julho de 2026" },
+    { id: "closet-iluminado", titulo: "Closet iluminado", legenda: "Nichos, cabideiros e gavetas brancos, com luz no rodapé.", data: "março de 2026" },
+  ],
+  conviteTitulo: "Acompanhe as obras",
+  conviteTexto: "Projetos entregues, bastidores da marcenaria e novidades toda semana.",
+  conviteCta: "Seguir no Instagram",
+  whatsapp: "Quero um assim",
 } as const;
 
 export const FAQ_TEXTO = {

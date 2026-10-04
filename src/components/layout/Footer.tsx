@@ -12,7 +12,7 @@ import { Pendente } from "../ui/Pendente";
 /**
  * Rodapé centrado na noite: logo, o slogan em Clash 200 com o caramelo
  * polido, contatos em ícones circulares, menu numa fileira, NAP idêntico ao
- * Google, a linha legal e, no chão, o nome JanSu gigante que sobe com a
+ * Google, a linha legal (sem crédito de desenvolvedor) e, no chão, o nome JanSu gigante que sobe com a
  * rolagem (textura, aria-hidden).
  */
 export function Footer() {
@@ -75,9 +75,6 @@ export function Footer() {
             CNPJ <Pendente marcador={site.cnpj} />
           </span>
           <Pendente marcador={RODAPE.politica} />
-          <a href={RODAPE.credito.href} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center hover:text-surface-alt hover:underline">
-            {RODAPE.credito.rotulo}
-          </a>
         </div>
       </div>
 

@@ -27,7 +27,8 @@ for (const a of alvos) {
       const [sel, f] = a.split(":");
       const el = document.querySelector(sel);
       scrollTo(0, el.getBoundingClientRect().top + scrollY - (f ? innerHeight * -Number(f) : 60));
-    } else scrollTo(0, Number(a));
+    } else if (a === "fim") scrollTo(0, document.documentElement.scrollHeight);
+    else scrollTo(0, Number(a));
   }, a);
   await new Promise((r) => setTimeout(r, 700));
   await p.screenshot({ path: `material/ef-${w}${reduce ? "-r" : ""}-${i++}.jpg`, type: "jpeg", quality: 70 });

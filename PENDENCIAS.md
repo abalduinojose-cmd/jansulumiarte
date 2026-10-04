@@ -33,6 +33,15 @@ no portfólio e no bloco MDF).
 | Rodapé | **CNPJ** e razão social. | `site.cnpj` |
 | Rodapé | **Política de privacidade.** | `RODAPE.politica` |
 
+## Vídeos e mapa
+
+- **Seção Instagram**: 3 reels reais enviados em 04/10 (loja planejada, quarto
+  no Bom Retiro, closet iluminado), em `public/videos` por `npm run videos`
+  (originais em `videos/`, fora do repositório). Legendas descrevem o que se
+  vê; confirmar com o cliente se quer outro texto ou outros vídeos.
+- **Mapa**: tiles do OpenStreetMap recoloridos na paleta (`python scripts/mapa.py`),
+  com o crédito "© OpenStreetMap" visível, como a licença exige.
+
 ## Fotos do Instagram
 
 O @jansu_lumiarte tem 46 posts, quase todos reels (vídeo). A busca pelo

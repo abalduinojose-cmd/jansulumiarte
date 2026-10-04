@@ -5,7 +5,7 @@ import path from "node:path";
 import puppeteer from "puppeteer-core";
 
 const BASE = "/jansulumiarte";
-const TIPOS = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".jpg": "image/jpeg", ".png": "image/png", ".webp": "image/webp", ".woff2": "font/woff2", ".txt": "text/plain", ".svg": "image/svg+xml", ".xml": "application/xml" };
+const TIPOS = { ".mp4": "video/mp4", ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".jpg": "image/jpeg", ".png": "image/png", ".webp": "image/webp", ".woff2": "font/woff2", ".txt": "text/plain", ".svg": "image/svg+xml", ".xml": "application/xml" };
 const srv = createServer(async (req, res) => {
   const u = decodeURIComponent(req.url.split("?")[0]);
   if (!u.startsWith(BASE)) {
@@ -49,8 +49,18 @@ for (const [nome, vp] of [
     og: document.querySelector('meta[property="og:image"]')?.content,
   }));
   const mascaraOk = (await p.evaluate(async (u) => (await fetch(u)).status, info.mascara.slice(5, -2))) === 200;
-  if (falhas.length || info.quebradas.length || erros.length || !mascaraOk) ruim++;
-  console.log(nome, JSON.stringify({ falhas, erros, ...info, mascaraOk }, null, 0));
+  /* Capas e arquivos dos reels: atributos não disparam "imagem quebrada". */
+  const videos = await p.evaluate(async () =>
+    Promise.all(
+      [...document.querySelectorAll("#instagram video")].map(async (v) => {
+        const fonte = v.querySelector("source").src;
+        return `${(await fetch(v.poster)).status}/${(await fetch(fonte, { method: "HEAD" })).status} ${fonte.split("/").pop()}`;
+      }),
+    ),
+  );
+  const videosOk = videos.length === 3 && videos.every((v) => v.startsWith("200/200"));
+  if (falhas.length || info.quebradas.length || erros.length || !mascaraOk || !videosOk) ruim++;
+  console.log(nome, JSON.stringify({ falhas, erros, ...info, mascaraOk, videos }, null, 0));
   await p.close();
 }
 await b.close();
