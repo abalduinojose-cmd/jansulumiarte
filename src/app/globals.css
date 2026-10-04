@@ -1,0 +1,693 @@
+@import "tailwindcss";
+
+/* --------------------------------------------------------------------------
+   Marcenaria JanSu Lumiarte · v2 "Oficina noturna"
+   Estrutura da Celebrare / Cabana Afrodite (hero em cartão dentro da noite,
+   pílulas com seta, faixas claras e escuras costuradas por silhueta, CTA
+   fixo), com a marca da JanSu: noite de madeira escura dominante, creme de
+   respiro e UM acento afiado, o caramelo. A silhueta é a própria plaina da
+   logo, usada como horizonte entre as seções.
+
+   Tipografia (guia de estética do cookbook): Clash Display em extremos, 600
+   contra 200, com salto de tamanho de 3x; Satoshi no texto.
+
+   Contraste: caramelo sobre a noite 7,3:1 · #111 sobre caramelo 7,4:1 ·
+   branco sobre marrom 7,6:1 · muted sobre creme 4,7:1 (só >= 16px).
+   Proibido: branco sobre caramelo e wood como cor de texto.
+   -------------------------------------------------------------------------- */
+@theme {
+  --color-noite: #16100b;
+  --color-noite-2: #221811;
+  --color-brand: #6b4226;
+  --color-brand-quente: #84552f;
+  --color-brand-700: #52321d;
+  --color-wood: #b8875a;
+  --color-accent: #c89b62;
+  --color-accent-claro: #e2c08f;
+  --color-accent-fundo: #a97c46;
+  --color-surface: #f5f1ea;
+  --color-surface-alt: #ffffff;
+  --color-ink: #111111;
+  --color-muted: #6b6b6b;
+  --color-line: #e3dcd1;
+
+  --font-display: var(--font-clash), "Clash Display", system-ui, sans-serif;
+  --font-body: var(--font-satoshi), "Satoshi", system-ui, sans-serif;
+
+  --ease-plaina: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Contador da oferta: um inteiro animável, lido por counter(). */
+@property --pct {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 15;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+  h3 {
+    letter-spacing: -0.015em;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  .no-escuro :focus-visible {
+    outline-color: var(--color-accent);
+  }
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-ink);
+  }
+  nextjs-portal {
+    display: none;
+  }
+}
+
+@utility container-page {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 78rem;
+  padding-inline: clamp(1rem, 5vw, 3rem);
+}
+
+/* ---- Escala: extremos de peso e de tamanho ------------------------------ */
+@utility t-h1 {
+  font-size: clamp(2.75rem, 1.2rem + 6.4vw, 6.25rem);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+}
+@utility t-h2 {
+  font-size: clamp(2.25rem, 1.4rem + 3.4vw, 4.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+}
+@utility t-h3 {
+  font-size: clamp(1.4rem, 1.2rem + 0.7vw, 1.8rem);
+}
+@utility t-lead {
+  font-size: clamp(1.125rem, 1.05rem + 0.35vw, 1.3rem);
+  line-height: 1.55;
+}
+/* O peso fino da Clash: a outra metade do contraste. */
+@utility fino {
+  font-weight: 200;
+  letter-spacing: -0.02em;
+}
+@utility rotulo {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+/* Caramelo polido em texto grande sobre a noite (pior trecho 5:1). */
+@utility caramelo-metalico {
+  background: linear-gradient(100deg, var(--color-accent-fundo) 0%, var(--color-accent) 30%, var(--color-accent-claro) 52%, var(--color-accent) 74%, var(--color-accent-fundo) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Grão de madeira/papel sobre as faixas escuras: SVG de ruído em data URI,
+   sem mix-blend (lição da Celebrare: blend custava 10 pontos de perf). */
+@utility grao {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 0.95 0 0 0 0 0.9 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* Papel de prancha: só nos desenhos técnicos. */
+@utility papel {
+  background-image:
+    linear-gradient(rgb(107 66 38 / 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(107 66 38 / 0.07) 1px, transparent 1px),
+    linear-gradient(rgb(107 66 38 / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(107 66 38 / 0.035) 1px, transparent 1px);
+  background-size:
+    40px 40px,
+    40px 40px,
+    8px 8px,
+    8px 8px;
+  background-position: center top;
+}
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  /* ---- Pílulas com chip de seta (padrão Celebrare/Cabana) ---------------- */
+  .btn {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    min-height: 2.75rem;
+    border-radius: 999px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+    transition:
+      transform 0.35s var(--ease-plaina),
+      box-shadow 0.35s ease,
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      color 0.3s ease;
+  }
+  .btn:active {
+    transform: scale(0.97);
+  }
+  /* Brilho que atravessa a pílula no hover. */
+  .btn-madeira::after,
+  .btn-caramelo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(105deg, transparent 30%, rgb(255 255 255 / 0.35) 48%, transparent 66%);
+    transform: translateX(-110%);
+    transition: transform 0.8s var(--ease-plaina);
+  }
+  .btn-madeira:hover::after,
+  .btn-caramelo:hover::after {
+    transform: translateX(110%);
+  }
+  .btn-madeira {
+    background: linear-gradient(115deg, var(--color-brand-quente) 0%, var(--color-brand) 55%, var(--color-brand-700) 100%);
+    color: var(--color-surface-alt);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.2),
+      0 14px 30px -14px rgb(82 50 29 / 0.7);
+  }
+  .btn-madeira:hover,
+  .btn-caramelo:hover {
+    transform: translateY(-2px);
+  }
+  .btn-caramelo {
+    background: linear-gradient(115deg, var(--color-accent-claro) 0%, var(--color-accent) 50%, var(--color-accent-fundo) 100%);
+    color: var(--color-ink);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.45),
+      0 14px 30px -12px rgb(169 124 70 / 0.55);
+  }
+  .btn-vidro {
+    border: 1px solid rgb(245 241 234 / 0.25);
+    background: rgb(245 241 234 / 0.08);
+    color: var(--color-surface-alt);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .btn-vidro:hover {
+    background: rgb(245 241 234 / 0.16);
+    border-color: rgb(245 241 234 / 0.5);
+    transform: translateY(-2px);
+  }
+  .btn-contorno {
+    border: 1px solid rgb(17 17 17 / 0.22);
+    color: var(--color-ink);
+  }
+  .btn-contorno:hover {
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+    color: var(--color-surface);
+  }
+  .btn-seta {
+    display: inline-flex;
+    height: 2.3rem;
+    width: 2.3rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: var(--color-noite);
+    color: var(--color-accent-claro);
+    transition: transform 0.45s var(--ease-plaina);
+  }
+  .btn-madeira .btn-seta {
+    background: var(--color-accent);
+    color: var(--color-ink);
+  }
+  .btn:hover .btn-seta {
+    transform: rotate(45deg);
+  }
+
+  /* Link com traço que se desenha. */
+  .link-traco {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.75rem;
+    font-weight: 700;
+    color: var(--color-brand);
+  }
+  .link-traco::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.45rem;
+    height: 1px;
+    background: var(--color-accent);
+    transform-origin: left;
+    transition: transform 0.35s var(--ease-plaina);
+  }
+  .link-traco:hover::after {
+    transform: scaleX(0.35);
+  }
+  .no-escuro .link-traco {
+    color: var(--color-accent-claro);
+  }
+
+  /* ---- Cartões ---------------------------------------------------------- */
+  .cartao {
+    background: var(--color-surface-alt);
+    border: 1px solid rgb(17 17 17 / 0.07);
+    border-radius: 1.5rem;
+    box-shadow: 0 24px 50px -36px rgb(22 16 11 / 0.45);
+  }
+  .cartao-vivo {
+    transition:
+      transform 0.45s var(--ease-plaina),
+      box-shadow 0.45s var(--ease-plaina),
+      border-color 0.3s ease;
+  }
+  .cartao-vivo:hover {
+    transform: translateY(-6px);
+    border-color: rgb(200 155 98 / 0.55);
+    box-shadow: 0 34px 60px -34px rgb(22 16 11 / 0.55);
+  }
+
+  /* Etiqueta de pendência: visível de propósito na prévia. */
+  .pendente {
+    display: inline-block;
+    border: 1px dashed var(--color-brand);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.85);
+    padding: 0.2rem 0.7rem;
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--color-brand-700);
+  }
+  .no-escuro .pendente {
+    border-color: rgb(226 192 143 / 0.7);
+    background: rgb(22 16 11 / 0.55);
+    color: var(--color-accent-claro);
+  }
+
+  /* ---- Cabeçalho: claro sobre a noite do hero, creme depois de 80px ------ */
+  .cabecalho {
+    color: var(--color-surface);
+    transition: color 0.4s ease;
+  }
+  .cabecalho::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgb(245 241 234 / 0.88);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgb(17 17 17 / 0.07);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  html[data-rolou="1"] .cabecalho {
+    color: var(--color-ink);
+  }
+  html[data-rolou="1"] .cabecalho::before {
+    opacity: 1;
+  }
+  html[data-menu="1"] .cabecalho {
+    color: var(--color-surface);
+  }
+  html[data-menu="1"] .cabecalho::before {
+    opacity: 0;
+  }
+
+  /* ---- Linha da plaina (assinatura) -------------------------------------- */
+  .plaina-trilho {
+    position: relative;
+    height: 3.25rem;
+  }
+  .plaina-bruto,
+  .plaina-liso {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+  }
+  .plaina-bruto {
+    right: 0;
+    background-image: repeating-linear-gradient(90deg, var(--color-wood) 0 6px, transparent 6px 11px);
+    opacity: 0.7;
+  }
+  .plaina-liso {
+    width: 92%;
+    background: var(--color-accent);
+  }
+  .plaina-cursor {
+    position: absolute;
+    bottom: 1px;
+    left: 92%;
+    width: 4.5rem;
+    translate: -100% 0;
+  }
+  .no-escuro .plaina-bruto {
+    background-image: repeating-linear-gradient(90deg, rgb(245 241 234 / 0.4) 0 6px, transparent 6px 11px);
+  }
+
+  /* ---- Faixa corrida dos diferenciais ------------------------------------ */
+  .faixa {
+    display: flex;
+    width: max-content;
+    gap: 3rem;
+  }
+
+  /* ---- CTA fixo: pílula clara com a nota (padrão Cabana/Celebrare) ------- */
+  .cta-fixo {
+    position: fixed;
+    z-index: 40;
+    left: 50%;
+    bottom: calc(0.9rem + env(safe-area-inset-bottom));
+    transform: translateX(-50%) translateY(160%);
+    opacity: 0;
+    visibility: hidden;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.4rem 0.4rem 0.4rem 1.1rem;
+    border-radius: 999px;
+    white-space: nowrap;
+    background: rgb(245 241 234 / 0.94);
+    border: 1px solid rgb(17 17 17 / 0.1);
+    backdrop-filter: blur(14px);
+    color: var(--color-ink);
+    box-shadow: 0 16px 36px -18px rgb(22 16 11 / 0.6);
+    transition:
+      transform 0.45s var(--ease-plaina),
+      opacity 0.35s ease,
+      visibility 0s linear 0.45s;
+  }
+  .cta-fixo[data-visivel="1"] {
+    transform: translateX(-50%);
+    opacity: 1;
+    visibility: visible;
+    transition:
+      transform 0.45s var(--ease-plaina),
+      opacity 0.35s ease,
+      visibility 0s;
+  }
+  html[data-menu="1"] .cta-fixo {
+    visibility: hidden;
+  }
+  .cta-zap {
+    display: inline-flex;
+    height: 2.6rem;
+    align-items: center;
+    gap: 0.45rem;
+    padding-inline: 1rem;
+    border-radius: 999px;
+    background: #1f8f4e;
+    color: #fff;
+    font-weight: 700;
+  }
+  @media (min-width: 768px) {
+    .cta-fixo {
+      left: auto;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      transform: translateY(160%);
+    }
+    .cta-fixo[data-visivel="1"] {
+      transform: none;
+    }
+  }
+
+  dialog.galeria::backdrop {
+    background: rgb(22 16 11 / 0.96);
+  }
+  details[open] .faq-mais {
+    rotate: 45deg;
+  }
+
+  /* Contador do 15%: o número é um counter() de --pct. */
+  .contador {
+    counter-reset: pct var(--pct);
+  }
+  .contador::before {
+    content: counter(pct);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Movimento
+   Entrada do hero na carga; o resto anda com a ROLAGEM (CSS scroll-driven,
+   zero JS). O estado base de toda classe é o FINAL: sem suporte, tudo
+   aparece parado e no lugar.
+   Com "reduzir movimento" ligado, nada se desloca: as seções só acendem
+   (opacidade), as palavras da frase só mudam de cor e o 15% só conta.
+   -------------------------------------------------------------------------- */
+@keyframes sobe {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+}
+@keyframes aparece {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes zoom-entrada {
+  from {
+    transform: scale(1.08);
+  }
+}
+@keyframes acende {
+  from {
+    color: rgb(245 241 234 / 0.3);
+  }
+}
+@keyframes conta {
+  from {
+    --pct: 0;
+  }
+}
+@keyframes enche {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sobe {
+    animation: sobe 0.9s var(--ease-plaina) both;
+  }
+  .zoom-entrada {
+    animation: zoom-entrada 2.4s var(--ease-plaina) both;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  /* Valem com ou sem "reduzir movimento": mudam cor e número, não posição. */
+  .frase-palavra {
+    animation: acende linear both;
+    animation-timeline: --frase;
+    animation-range: contain calc(var(--i) / var(--n) * 70%) contain calc((var(--i) + 1) / var(--n) * 70%);
+  }
+  .frase-trilho {
+    view-timeline: --frase block;
+  }
+  .contador {
+    animation: conta linear both;
+    animation-timeline: view();
+    animation-range: entry 20% cover 45%;
+  }
+  .processo-linha {
+    transform-origin: top;
+    animation: enche linear both;
+    animation-timeline: --processo;
+    animation-range: cover 25% cover 75%;
+  }
+  .processo-trilho {
+    view-timeline: --processo block;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .revela,
+    .cortina {
+      animation: aparece linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 18%;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes revela {
+      from {
+        opacity: 0;
+        transform: translateY(32px);
+      }
+    }
+    /* --d atrasa cada item da grade: as colunas entram em cascata. */
+    .revela {
+      animation: revela linear both;
+      animation-timeline: view();
+      animation-range: entry calc(4% + var(--d, 0) * 7%) cover calc(24% + var(--d, 0) * 7%);
+    }
+
+    @keyframes cortina {
+      from {
+        clip-path: inset(22% 0 0 0 round 1.5rem);
+        transform: scale(1.04);
+      }
+    }
+    .cortina {
+      animation: cortina linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 40%;
+    }
+
+    /* Hero: ao rolar, o cartão recua e a foto desce por dentro dele. */
+    @keyframes cartao-recua {
+      to {
+        transform: scale(0.94);
+        border-radius: 3rem;
+      }
+    }
+    .hero-cartao {
+      animation: cartao-recua linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 90vh;
+    }
+    @keyframes foto-desce {
+      from {
+        transform: translateY(0) scale(1.12);
+      }
+      to {
+        transform: translateY(9%) scale(1.12);
+      }
+    }
+    .hero-foto {
+      animation: foto-desce linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+
+    /* Faixa dos diferenciais corre para o lado enquanto a página desce. */
+    @keyframes faixa-corre {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-38%);
+      }
+    }
+    .faixa {
+      animation: faixa-corre linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+
+    /* Parallax de foto dentro da moldura. */
+    @keyframes deriva {
+      from {
+        transform: translateY(-5%) scale(1.12);
+      }
+      to {
+        transform: translateY(5%) scale(1.12);
+      }
+    }
+    .deriva {
+      animation: deriva linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+
+    /* A plaina corre o fio; o liso acompanha. */
+    .plaina-trilho {
+      view-timeline-name: --plaina;
+    }
+    @keyframes plaina-corre {
+      from {
+        left: 12%;
+      }
+      to {
+        left: 92%;
+      }
+    }
+    @keyframes plaina-alisa {
+      from {
+        width: 12%;
+      }
+      to {
+        width: 92%;
+      }
+    }
+    .plaina-cursor {
+      animation: plaina-corre linear both;
+      animation-timeline: --plaina;
+      animation-range: cover 5% cover 65%;
+    }
+    .plaina-liso {
+      animation: plaina-alisa linear both;
+      animation-timeline: --plaina;
+      animation-range: cover 5% cover 65%;
+    }
+
+    /* Nome gigante do rodapé sobe do chão. */
+    @keyframes nome-sobe {
+      from {
+        transform: translateY(45%);
+      }
+    }
+    .nome-sobe {
+      animation: nome-sobe linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 60%;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.001ms !important;
+  }
+}
